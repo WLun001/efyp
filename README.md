@@ -1,3 +1,6 @@
+# Instruction to run the project
+[How-to-run](how-to-run.md)
+
 Yii 2 Basic Project Template
 ============================
 
