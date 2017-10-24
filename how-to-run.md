@@ -10,5 +10,5 @@
 	 * default username: root
  	* default password: [blank]
  6. Create a new database name "efyp"
- 7. Select "e-fyp" db and click on "import" tab, "Choose File", import id2512886_fypportal.sql
+ 7. Select "efyp" db and click on "import" tab, "Choose File", import id2512886_fypportal.sql
  8. Open browser to type http://localhost/e-fyp/yii2/web/
