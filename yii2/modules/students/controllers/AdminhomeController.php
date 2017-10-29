@@ -10,3 +10,4 @@ class AdminhomeController extends \yii\web\Controller
     }
 
 }
+?>

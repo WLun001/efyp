@@ -179,7 +179,6 @@ return array(
     'PHPUnit_Util_Test' => $vendorDir . '/phpunit/phpunit/src/Util/Test.php',
     'PHPUnit_Util_TestDox_NamePrettifier' => $vendorDir . '/phpunit/phpunit/src/Util/TestDox/NamePrettifier.php',
     'PHPUnit_Util_TestDox_ResultPrinter' => $vendorDir . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter.php',
-    'PHPUnit_Util_TestDox_ResultPrinter_HTML' => $vendorDir . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter/HTML.php',
     'PHPUnit_Util_TestDox_ResultPrinter_Text' => $vendorDir . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter/Text.php',
     'PHPUnit_Util_TestDox_ResultPrinter_XML' => $vendorDir . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter/XML.php',
     'PHPUnit_Util_TestSuiteIterator' => $vendorDir . '/phpunit/phpunit/src/Util/TestSuiteIterator.php',

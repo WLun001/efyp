@@ -29,6 +29,10 @@ class ComposerStaticInit9f9e4e27e79990b4ee47bd62041b34f3
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
+        'm' => 
+        array (
+            'moonland\\phpexcel\\' => 18,
+        ),
         'k' => 
         array (
             'kartik\\widgets\\' => 15,
@@ -135,6 +139,10 @@ class ComposerStaticInit9f9e4e27e79990b4ee47bd62041b34f3
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+        ),
+        'moonland\\phpexcel\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/moonlandsoft/yii2-phpexcel',
         ),
         'kartik\\widgets\\' => 
         array (
@@ -316,6 +324,10 @@ class ComposerStaticInit9f9e4e27e79990b4ee47bd62041b34f3
             'Prophecy\\' => 
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
+            ),
+            'PHPExcel' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpoffice/phpexcel/Classes',
             ),
         ),
         'H' => 
@@ -522,7 +534,6 @@ class ComposerStaticInit9f9e4e27e79990b4ee47bd62041b34f3
         'PHPUnit_Util_Test' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Test.php',
         'PHPUnit_Util_TestDox_NamePrettifier' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/NamePrettifier.php',
         'PHPUnit_Util_TestDox_ResultPrinter' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter.php',
-        'PHPUnit_Util_TestDox_ResultPrinter_HTML' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter/HTML.php',
         'PHPUnit_Util_TestDox_ResultPrinter_Text' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter/Text.php',
         'PHPUnit_Util_TestDox_ResultPrinter_XML' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestDox/ResultPrinter/XML.php',
         'PHPUnit_Util_TestSuiteIterator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/TestSuiteIterator.php',

@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "*",
         "kartik-v/yii2-widgets": "*",
         "kartik-v/yii2-field-range": "dev-master",
-        "kartik-v/yii2-helpers": "dev-master"
+        "kartik-v/yii2-helpers": "dev-master",
+        "moonlandsoft/yii2-phpexcel": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
