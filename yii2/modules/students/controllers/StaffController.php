@@ -48,19 +48,32 @@ class StaffController extends Controller
         $searchModel = new StaffSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $model = new Staff();
+        $data = null;
+        if (Yii::$app->request->post()) {
+            //$model->files = UploadedFile::getInstance($model, 'files');
+            $files = UploadedFile::getInstance($model, 'files');
+            $files->saveAs('uploads/' . $files->baseName . '.' . $files->extension);
 
-        if (Yii::$app->request->isPost) {
-            $model->files = UploadedFile::getInstance($model, 'files');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return;
-            }
+            $data = \moonland\phpexcel\Excel::widget([
+                'mode' => 'import', 
+                'fileName' =>'uploads/' . $files->baseName . '.' . $files->extension, 
+                'setFirstRecordAsKeys' => true, // if you want to set the keys of record column with first record, if it not set, the header with use the alphabet column on excel. 
+                'setIndexSheetByName' => true, // set this if your excel data with multiple worksheet, the index of array will be set with the sheet name. If this not set, the index will use numeric. 
+                //'getOnlySheet' => 'sheet1', // you can set this property if you want to get the specified sheet from the excel data with multiple worksheet.
+            ]);
+            // if ($model->upload()) {
+            //     Yii::$app->session->setFlash('success','File Uploaded');
+            //     return;
+            // } else if(!($model->upload())){
+            //     Yii::$app->session->setFlash('fail','No File Uploaded');
+            // }
         }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'model' => $model
+            'model' => $model,
+            'data' => $data
         ]);
     }
     /**
