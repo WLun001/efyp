@@ -19,7 +19,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Staff', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <?= Html::a('Export to CVS', ['export', 'dataProvider' => $dataProvider], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to export?',
+                'method' => 'post',
+            ],
+        ]) ?>
+    </p>                                                                           
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -27,8 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
-            'userID',
-            
+            'userID',             
             ['label'=>'Role',
              'value'=>function($model){
                 return $model->rolesText;
