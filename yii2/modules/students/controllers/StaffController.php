@@ -1,7 +1,5 @@
 <?php
-
 namespace app\modules\students\controllers;
-
 use Yii;
 use app\modules\students\models\Staff;
 use app\modules\students\models\StaffSearch;
@@ -10,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\User;
 use yii\db\Query;
+use yii\web\UploadedFile;
 /**
  * StaffController implements the CRUD actions for Staff model.
  */
@@ -18,6 +17,7 @@ class StaffController extends Controller
     /**
      * @inheritdoc
      */
+
     public function behaviors()
     {
         return [
@@ -39,7 +39,6 @@ class StaffController extends Controller
             ],
         ];
     }
-
     /**
      * Lists all Staff models.
      * @return mixed
@@ -48,13 +47,22 @@ class StaffController extends Controller
     {
         $searchModel = new StaffSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $model = new Staff();
+
+        if (Yii::$app->request->isPost) {
+            $model->files = UploadedFile::getInstance($model, 'files');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'model' => $model
         ]);
     }
-
     /**
      * Displays a single Staff model.
      * @param integer $id
@@ -66,7 +74,6 @@ class StaffController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-
     /**
      * Creates a new Staff model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -75,18 +82,14 @@ class StaffController extends Controller
     public function actionCreate()
     {
         $model = new Staff();
-
         if ($model->load($post = Yii::$app->request->post())) {
-
             // var_dump($model);exit();
             $password = sha1($post['Staff']['password']);
             //var_dump($password);exit();
             $auth = Yii::$app->authManager;
             if($post['Staff']['roleArray']){
                 $model->role = implode(",", $post['Staff']['roleArray']);
-
             }
-
             $y = sizeof($post['Staff']['roleArray']);
             $model->save();
             // var_dump($model->id);exit();
@@ -96,9 +99,7 @@ class StaffController extends Controller
             $user->role = $model->role;
             $user->save();
             //var_dump($user);exit();
-
             for($i=0; $i<$y; $i++) {
-
                 if($post['Staff']['roleArray'][$i] == '1'){
                     $authorRole = $auth->getRole('admin');
                 }elseif ($post['Staff']['roleArray'][$i] == '2'){
@@ -110,7 +111,6 @@ class StaffController extends Controller
                 //var_dump($user->id);exit();
                 $auth->assign($authorRole, $user->id);
             }
-
             
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -119,7 +119,6 @@ class StaffController extends Controller
             ]);
         }
     }
-
     /**
      * Updates an existing Staff model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -129,9 +128,7 @@ class StaffController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if ($model->load($post = Yii::$app->request->post())) {
-
             $auth = Yii::$app->authManager;
               // var_dump($post);exit();
             if($post['Staff']['roleArray'][1]){
@@ -142,22 +139,16 @@ class StaffController extends Controller
           
             $model->save();
          
-
             $user = User::find()
             ->where(['username'=> $model->userID])
             ->one();
-
             $user->role = $model->role;
             $user->save();
-
             $connection = \Yii::$app->db;
             $sql = $connection->createCommand('DELETE FROM auth_assignment WHERE user_id='.$user->id)->execute();
-
             $y = sizeof($post['Staff']['roleArray']);
             
-
             for($i=0; $i<$y; $i++) {
-
                 if($post['Staff']['roleArray'][$i] == '1'){
                     $authorRole = $auth->getRole('admin');
                 }elseif ($post['Staff']['roleArray'][$i] == '2'){
@@ -172,14 +163,12 @@ class StaffController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             $roleArray = explode(",", $model->role);
-
             return $this->render('update', [
                 'model' => $model,
                 'roleArray' => $roleArray,
             ]);
         }
     }
-
     /**
      * Deletes an existing Staff model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -194,19 +183,14 @@ class StaffController extends Controller
         $user = User::find()
               ->where(['username'=> $model->userID])
               ->one();
-
         $auth = Yii::$app->authManager;
-
         $connection = \Yii::$app->db;
         $sql = $connection->createCommand('DELETE FROM auth_assignment WHERE user_id='.$user->id)->execute();
         $model->delete();
         $user->delete();
         
-
-
         return $this->redirect(['index']);
     }
-
     /**
      * Finds the Staff model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

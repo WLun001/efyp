@@ -1,10 +1,8 @@
 <?php
-
 namespace app\modules\students\models;
-
 use Yii;
 use app\modules\students\models\Faculty;
-
+use yii\web\UploadedFile;
 /**
  * This is the model class for table "staff".
  *
@@ -26,11 +24,11 @@ class Staff extends \yii\db\ActiveRecord
      */
     public $roleArray;
     public $password;
+    public $files;
     public static function tableName()
     {
         return 'staff';
     }
-
     /**
      * @inheritdoc
      */
@@ -43,9 +41,9 @@ class Staff extends \yii\db\ActiveRecord
             [['contactNo'], 'string', 'max' => 20],
             [['userID'], 'unique'],
             [['faculty'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty' => 'facultyID']],
+            [['files'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xlsx, csv', 'maxSize' => 1000000],
         ];
-    }
-
+    }    
     /**
      * @inheritdoc
      */
@@ -62,33 +60,35 @@ class Staff extends \yii\db\ActiveRecord
             'contactNo' => 'Contact No',
         ];
     }
-
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getRolesText(){
-
         $roleArr = explode(",", $this->role);
         $roleInTextArr = array();
         foreach($roleArr as $arole){
             array_push($roleInTextArr, $this->roles[$arole]);
-
         }
-
         return implode(", ", $roleInTextArr);
     }
-
     public function getRoles()
     {
         return array(1 => 'Admin',
                      2 => 'FYP Coordinator',
                      3 => 'Lecturer (Supervisors/Co-supervisors/Moderators)');
     }
-
     public function getFaculty()
     {
         return $this->hasOne(Faculty::className(), ['facultyID' => 'faculty_fk']);
     }
 
-
+    public function upload()
+    {
+        if ($this->validate()) { 
+            $files->saveAs('uploads/' . $files->baseName . '.' . $files->extension);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
