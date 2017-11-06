@@ -50,6 +50,9 @@ class StaffController extends Controller
         $searchModel = new StaffSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+//        var_dump(Yii::$app->request->queryParams);
+//        exit;
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -209,10 +212,19 @@ class StaffController extends Controller
         return $this->redirect(['index']);
     }
 
-     public function actionExport($dataProvider){
+     public function actionExport(/*$dataProvider*/){
 
-        // $searchModel = new StaffSearch();
-        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);      
+         //$searchModel = new StaffSearch();
+         $id = Yii::$app->request->getQueryParam('userID');
+
+//         $searchModel = new StaffSearch();
+//         $dataProvider = $searchModel->search($id);
+
+
+
+
+         var_dump($id);
+         exit;
 
         //$this->render('index',array('model'=>$dataProvider)); 
 
@@ -228,6 +240,8 @@ class StaffController extends Controller
             $name = $model->name;
             $id = $model->id;
             fputcsv($output, array($name, $id));
+
+            //var_dump($model);
          
        //  //if (count($users) > 0) {
        //     // foreach ($users -> attributes as $attributes => $row) {

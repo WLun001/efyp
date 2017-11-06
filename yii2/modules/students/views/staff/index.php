@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use app\modules\students\models\Faculty;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\students\models\StaffSearch */
@@ -19,14 +20,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Staff', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Export to CVS', ['export', 'dataProvider' => $dataProvider], [
+        <?= Html::a('Export to CVS', ['export', 'userID' =>
+            ArrayHelper::getValue(Yii::$app->request->get(), 'StaffSearch.userID')],
+            /*[Yii::$app->request->queryParams['StaffSearch']["userID"] =>
+            ArrayHelper::getValue(Yii::$app->request->get(), 'StaffSearch.userID') ],*/ [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to export?',
                 'method' => 'post',
             ],
-        ]) ?>
-    </p>                                                                           
+        ]); ?>
+    </p>        <?php //rint_r($dataProvider->getModels()); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -34,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
-            'userID',             
+            'userID',
             ['label'=>'Role',
              'value'=>function($model){
                 return $model->rolesText;
