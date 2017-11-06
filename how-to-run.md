@@ -12,3 +12,7 @@
  6. Create a new database name "efyp"
  7. Select "efyp" db and click on "import" tab, "Choose File", import id2512886_fypportal.sql
  8. Open browser to type http://localhost/efyp/yii2/web/
+ 
+ ### Preferred IDEs
+ * [PhpStorm](https://www.jetbrains.com/phpstorm/)
+ * [Sublime Text](https://www.sublimetext.com/)
