@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\User;
 use yii\db\Query;
+use arturoliveira\ExcelView;
 /**
  * StaffController implements the CRUD actions for Staff model.
  */
@@ -195,7 +196,7 @@ class StaffController extends Controller
     {
         $model = $this->findModel($id);
         //var_dump($model);exit();
-        
+
         $user = User::find()
               ->where(['username'=> $model->userID])
               ->one();
@@ -206,7 +207,7 @@ class StaffController extends Controller
         $sql = $connection->createCommand('DELETE FROM auth_assignment WHERE user_id='.$user->id)->execute();
         $model->delete();
         $user->delete();
-        
+
 
 
         return $this->redirect(['index']);
@@ -214,63 +215,77 @@ class StaffController extends Controller
 
      public function actionExport(/*$dataProvider*/){
 
-         //$searchModel = new StaffSearch();
-         $id = Yii::$app->request->getQueryParam('userID');
-
-//         $searchModel = new StaffSearch();
-//         $dataProvider = $searchModel->search($id);
-
-
-
-
-         var_dump($id);
-         exit;
-
-        //$this->render('index',array('model'=>$dataProvider)); 
-
-        //$users = $dataProvider->getModels();
-         
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=Users.csv');
-        $output = fopen('php://output', 'w');
-        fputcsv($output, array('No', 'First Name', 'Last Name', 'Email'));
-
-
-        foreach($dataProvider->models as $model){
-            $name = $model->name;
-            $id = $model->id;
-            fputcsv($output, array($name, $id));
-
-            //var_dump($model);
-         
-       //  //if (count($users) > 0) {
-       //     // foreach ($users -> attributes as $attributes => $row) {
-       //      foreach ($users as $row) {
-       //         fputcsv($output, $row);
-       //      }
-                
-       //     // }
-       // // }
-
-        // $count = 0;
-        // for($count=0; $count<=6; $count++){
-
-        //     $row = $users->limit($count)->one();
-
-        //     fputcsv($output, array($row-> name, $row-> email));
-
-        // }
-
-        // foreach($users as $row){
-        //     $name = $row -> name;
-        //     $id = $row -> id;
-        //     fputcsv($output, $dataProvider->totalCount);
-        // }
-
-        }
-
-        fclose($output);  
-        
+         $searchModel = new StaffSearch();
+         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+         ExcelView::widget([
+             'dataProvider' => $dataProvider,
+             'filterModel' => $searchModel,
+             'fullExportType'=> 'xlsx', //can change to html,xls,csv and so on
+             'grid_mode' => 'export',
+             'columns' => [
+                 ['class' => 'yii\grid\SerialColumn'],
+                 'code',
+                 'name',
+                 'population',
+             ],
+         ]);
+//         //$searchModel = new StaffSearch();
+//         $id = Yii::$app->request->getQueryParam('userID');
+//
+////         $searchModel = new StaffSearch();
+////         $dataProvider = $searchModel->search($id);
+//
+//
+//
+//
+//         var_dump($id);
+//         exit;
+//
+//        //$this->render('index',array('model'=>$dataProvider));
+//
+//        //$users = $dataProvider->getModels();
+//
+//        header('Content-Type: text/csv; charset=utf-8');
+//        header('Content-Disposition: attachment; filename=Users.csv');
+//        $output = fopen('php://output', 'w');
+//        fputcsv($output, array('No', 'First Name', 'Last Name', 'Email'));
+//
+//
+//        foreach($dataProvider->models as $model){
+//            $name = $model->name;
+//            $id = $model->id;
+//            fputcsv($output, array($name, $id));
+//
+//            //var_dump($model);
+//
+//       //  //if (count($users) > 0) {
+//       //     // foreach ($users -> attributes as $attributes => $row) {
+//       //      foreach ($users as $row) {
+//       //         fputcsv($output, $row);
+//       //      }
+//
+//       //     // }
+//       // // }
+//
+//        // $count = 0;
+//        // for($count=0; $count<=6; $count++){
+//
+//        //     $row = $users->limit($count)->one();
+//
+//        //     fputcsv($output, array($row-> name, $row-> email));
+//
+//        // }
+//
+//        // foreach($users as $row){
+//        //     $name = $row -> name;
+//        //     $id = $row -> id;
+//        //     fputcsv($output, $dataProvider->totalCount);
+//        // }
+//
+//        }
+//
+//        fclose($output);
+//
 
     }
 
