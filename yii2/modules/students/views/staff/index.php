@@ -38,8 +38,21 @@ $this->params['breadcrumbs'][] = $this->title;
     $gridColumns = [
     ['class' => 'yii\grid\SerialColumn'],
     'userID',
+        ['label'=>'Role',
+            'value'=>function($model){
+                return $model->rolesText;
+            },
+        ],
     'name',
+        'contactNo',
         'email',
+        ['label'=>'Faculty',
+            'value'=>function($model){
+                return $model->faculty->faculty;
+            },
+            'attribute' => 'faculty',
+            'filter' => ArrayHelper::map(Faculty::find()->all(),'facultyID','faculty')
+        ],
     ['class' => 'yii\grid\ActionColumn'],
     ];
 
@@ -48,11 +61,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => $gridColumns
     ]);
 
-    echo \kartik\grid\GridView::widget([
+   /* echo \kartik\grid\GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => $gridColumns
-    ]);
+    ]);*/
 
     ?>
     <?= GridView::widget([

@@ -1,2 +1,2 @@
-"#","User ID","Name","Email",""
-"1","admin","Dr Stella","stella@utar.my",""
+"#","User ID","Role","Name","Contact No","Email","Faculty",""
+"1","0","Lecturer (Supervisors/Co-supervisors/Moderators), FYP Coordinator","Chean Swee Ling","1111111111111","cheansweeling@utar.my","Lee Kong Chian Faculty of Engineering and Science(LKC FES)",""
