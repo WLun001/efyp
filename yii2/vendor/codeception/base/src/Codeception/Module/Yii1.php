@@ -41,7 +41,7 @@ use Yii;
  * You can use this module by setting params in your `functional.suite.yml`:
  *
  * ```yaml
- * class_name: FunctionalTester
+ * actor: FunctionalTester
  * modules:
  *     enabled:
  *         - Yii1:
@@ -224,8 +224,8 @@ class Yii1 extends Framework implements PartedModule
      */
     private function getDomainRegex($template, $parameters = [])
     {
-        if (preg_match('#https?://(.*?)/#', $template, $matches)) {
-            $template = $matches[1];
+        if ($host = parse_url($template, PHP_URL_HOST)) {
+            $template = $host;
         }
         if (strpos($template, '<') !== false) {
             $template = str_replace(['<', '>'], '#', $template);

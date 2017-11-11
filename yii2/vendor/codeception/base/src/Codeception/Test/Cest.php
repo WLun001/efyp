@@ -2,6 +2,7 @@
 namespace Codeception\Test;
 
 use Codeception\Example;
+use Codeception\Lib\Console\Message;
 use Codeception\Lib\Parser;
 use Codeception\Step\Comment;
 use Codeception\Util\Annotation;
@@ -43,7 +44,7 @@ class Cest extends Test implements
         $this->scenario->setFeature($this->getSpecFromMethod());
         $code = $this->getSourceCode();
         $this->parser->parseFeature($code);
-        $this->parser->attachMetadata(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
+        $this->getMetadata()->setParamsFromAnnotations(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
         $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance);
 
         // add example params to feature
@@ -149,7 +150,7 @@ class Cest extends Test implements
 
     public function toString()
     {
-        return sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), ucfirst($this->getFeature()));
+        return sprintf('%s: %s', ReflectionHelper::getClassShortName($this->getTestClass()), Message::ucfirst($this->getFeature()));
     }
 
     public function getSignature()

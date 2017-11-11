@@ -5,6 +5,8 @@ use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use app\modules\students\models\Faculty;
 use yii\helpers\Url;
+use arturoliveira\ExcelView;
+use kartik\export\ExportMenu;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\students\models\StaffSearch */
@@ -20,17 +22,39 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Staff', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Export to CVS', ['export', 'userID' =>
-            ArrayHelper::getValue(Yii::$app->request->get(), 'StaffSearch.userID')],
-            /*[Yii::$app->request->queryParams['StaffSearch']["userID"] =>
-            ArrayHelper::getValue(Yii::$app->request->get(), 'StaffSearch.userID') ],*/ [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to export?',
-                'method' => 'post',
-            ],
-        ]); ?>
+        <?= Html::a('Export to CVS', ['export'/*, 'userID' =>
+                    ArrayHelper::getValue(Yii::$app->request->get(), 'StaffSearch.userID')*/],
+                    /*[Yii::$app->request->queryParams['StaffSearch']["userID"] =>
+                    ArrayHelper::getValue(Yii::$app->request->get(), 'StaffSearch.userID') ],*/ [
+                    'class' => 'btn btn-danger',
+                    'data' => [
+                        'confirm' => 'Are you sure you want to export?',
+                        'method' => 'post',
+                    ],
+                ]); ?>
     </p>        <?php //rint_r($dataProvider->getModels()); ?>
+
+    <?php
+    $gridColumns = [
+    ['class' => 'yii\grid\SerialColumn'],
+    'userID',
+    'name',
+        'email',
+    ['class' => 'yii\grid\ActionColumn'],
+    ];
+
+    echo ExportMenu::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => $gridColumns
+    ]);
+
+    echo \kartik\grid\GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => $gridColumns
+    ]);
+
+    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -58,5 +82,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]); ?>
+    ]
+//        ['layout' => '{summary}<div class="pull-right">{export}&nbsp</div><div>{items}</div>{pager}',
+//            'exportConfig' => [
+//        \kartik\grid\GridView::EXCEL => ['label' => 'Export to Excel'],
+//    ],
+    );
+    ?>
 </div>

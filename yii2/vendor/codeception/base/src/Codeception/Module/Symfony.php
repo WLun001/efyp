@@ -9,6 +9,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
  * This module uses Symfony Crawler and HttpKernel to emulate requests and test response.
@@ -74,7 +75,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Usage example:
  *
  * ```yaml
- * class_name: AcceptanceTester
+ * actor: AcceptanceTester
  * modules:
  *     enabled:
  *         - Symfony:
@@ -133,20 +134,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
     public function _initialize()
     {
-        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
-        if (!file_exists($cache)) {
-            throw new ModuleRequireException(
-                __CLASS__,
-                "Symfony bootstrap file not found in $cache\n \n" .
-                "Please specify path to bootstrap file using `var_path` config option\n \n" .
-                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
-                "modules:\n    enabled:\n" .
-                "    - Symfony:\n" .
-                "        var_path: '../../app'\n" .
-                "        app_path: '../../app'"
-            );
-        }
-        require_once $cache;
+
+        $this->initializeSymfonyCache();
         $this->kernelClass = $this->getKernelClass();
         $maxNestingLevel = 200; // Symfony may have very long nesting level
         $xdebugMaxLevelKey = 'xdebug.max_nesting_level';
@@ -159,6 +148,31 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
 
         if ($this->config['cache_router'] === true) {
             $this->persistService('router', true);
+        }
+    }
+
+    /**
+     * Require Symfonys bootstrap.php.cache only for PHP Version < 7
+     *
+     * @throws ModuleRequireException
+     */
+    private function initializeSymfonyCache()
+    {
+        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        if (PHP_VERSION_ID < 70000 && !file_exists($cache)) {
+            throw new ModuleRequireException(
+                __CLASS__,
+                "Symfony bootstrap file not found in $cache\n \n" .
+                "Please specify path to bootstrap file using `var_path` config option\n \n" .
+                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
+                "modules:\n    enabled:\n" .
+                "    - Symfony:\n" .
+                "        var_path: '../../app'\n" .
+                "        app_path: '../../app'"
+            );
+        }
+        if (file_exists($cache)) {
+            require_once $cache;
         }
     }
 
@@ -350,7 +364,7 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
             $this->fail(sprintf('The "%s" url does not match with any route', $uri));
         }
-        $expected = array_merge(array('_route' => $routeName), $params);
+        $expected = array_merge(['_route' => $routeName], $params);
         $intersection = array_intersect_assoc($expected, $match);
 
         $this->assertEquals($expected, $intersection);
@@ -474,10 +488,16 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($profile = $this->getProfile()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
+                    $roles = $profile->getCollector('security')->getRoles();
+
+                    if ($roles instanceof Data) {
+                        $roles = $this->extractRawRoles($roles);
+                    }
+
                     $this->debugSection(
                         'User',
                         $profile->getCollector('security')->getUser()
-                        . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']'
+                        . ' [' . implode(',', $roles) . ']'
                     );
                 } else {
                     $this->debugSection('User', 'Anonymous');
@@ -493,6 +513,22 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
                 $this->debugSection('Time', $profile->getCollector('timer')->getTime());
             }
         }
+    }
+
+    /**
+     * @param Data $data
+     * @return array
+     */
+    private function extractRawRoles(Data $data)
+    {
+        if ($this->dataRevealsValue($data)) {
+            $roles = $data->getValue();
+        } else {
+            $raw = $data->getRawData();
+            $roles = isset($raw[1]) ? $raw[1] : [];
+        }
+
+        return $roles;
     }
 
     /**
@@ -541,5 +577,17 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         if ($this->client) {
             $this->client->rebootKernel();
         }
+    }
+
+    /**
+     * Public API from Data changed from Symfony 3.2 to 3.3.
+     *
+     * @param \Symfony\Component\VarDumper\Cloner\Data $data
+     *
+     * @return bool
+     */
+    private function dataRevealsValue(Data $data)
+    {
+        return method_exists($data, 'getValue');
     }
 }

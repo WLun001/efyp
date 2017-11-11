@@ -9,28 +9,35 @@ Really basic class to store data in global array and use it in Cests/Tests.
 <?php
 Fixtures::add('user1', ['name' => 'davert']);
 Fixtures::get('user1');
+Fixtures::exists('user1');
 
 ?>
 ```
 
 
 
-### add 
+#### add()
 
-*static*
+ *public static* add($name, $data) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Fixtures.php#L20)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L21)
 
-### cleanup 
+#### cleanup()
 
-*static*
+ *public static* cleanup() 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Fixtures.php#L34)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L35)
 
-### get 
+#### exists()
 
-*static*
+ *public static* exists($name) 
 
-[See source](https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Fixtures.php#L25)
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L40)
 
-<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.2/src/Codeception/Util/Fixtures.php">Help us to improve documentation. Edit module reference</a></div>
+#### get()
+
+ *public static* get($name) 
+
+[See source](https://github.com/Codeception/Codeception/blob/2.3/src/Codeception/Util/Fixtures.php#L26)
+
+<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.3/src//Codeception/Util/Fixtures.php">Help us to improve documentation. Edit module reference</a></div>

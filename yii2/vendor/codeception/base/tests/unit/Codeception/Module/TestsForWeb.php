@@ -20,7 +20,6 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
 
-        $this->module->_cleanup();
         $this->module->amOnPage('/info');
         $this->module->see('Information');
     }
@@ -166,6 +165,22 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSeeLink('Next', 'http://codeception.com/');
     }
 
+    public function testSeeLinkMatchesRelativeLink()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->seeLink('Sign in!', '/login');
+    }
+
+    public function testDontSeeLinkMatchesRelativeLink()
+    {
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Sign in!' and URL '/login' was found in page /info"
+        );
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeLink('Sign in!', '/login');
+    }
+
     public function testClick()
     {
         $this->module->amOnPage('/');
@@ -189,6 +204,13 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('val', $form['text']);
     }
 
+    public function testClickByLinkTitle()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click("Link Title");
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testClickOnContext()
     {
         $this->module->amOnPage('/');
@@ -204,6 +226,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('#checkin');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('agree', $form['terms']);
+    }
+
+    public function testCheckboxByName()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption('terms');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('agree', $form['terms']);
@@ -510,9 +541,11 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/field_values');
         $this->module->seeInField('select1', 'see test one');
+        $this->module->seeInField('select1', 'Selected');
         $this->module->dontSeeInField('select1', 'not seen one');
         $this->module->dontSeeInField('select1', 'not seen two');
         $this->module->dontSeeInField('select1', 'not seen three');
+        $this->module->dontSeeInField('select1', 'Not selected');
     }
 
     public function testSeeInFieldEmptyValueForUnselectedSelect()
@@ -630,6 +663,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSeeInFormFields('form', $params);
     }
 
+    public function testSeeInFormFieldsWithAssociativeArrays()
+    {
+        $this->module->amOnPage('/form/example17');
+        $this->module->seeInFormFields('form', [
+            'FooBar' => ['bar' => 'baz'],
+            'Food'   => ['beer' => ['yum' => ['yeah' => 'mmhm']]],
+        ]);
+    }
+
     public function testSeeInFieldWithNonLatin()
     {
         $this->module->amOnPage('/info');
@@ -675,6 +717,23 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/form/select');
         $result = $this->module->grabValueFrom('#age');
         $this->assertEquals('oldfag', $result);
+    }
+
+    /**
+     * @see https://github.com/Codeception/Codeception/issues/3866
+     */
+    public function testGrabValueFromWithFillField()
+    {
+        $this->module->amOnPage('/form/bug3866');
+        $this->module->fillField('empty', 'new value');
+        $result = $this->module->grabValueFrom('#empty');
+        $this->assertEquals('new value', $result);
+        $this->module->fillField('empty_textarea', 'new value');
+        $result = $this->module->grabValueFrom('#empty_textarea');
+        $this->assertEquals('new value', $result);
+        $this->module->fillField('//textarea[@name="textarea[name][]"]', 'new value');
+        $result = $this->module->grabValueFrom('#textarea_with_square_bracket');
+        $this->assertEquals('new value', $result);
     }
 
     public function testGrabAttributeFrom()
@@ -984,6 +1043,8 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('Is Codeception maintainer', $form['description']);
         $this->assertFalse(isset($form['disabled_fieldset']));
+        $this->assertFalse(isset($form['disabled_fieldset_textarea']));
+        $this->assertFalse(isset($form['disabled_fieldset_select']));
         $this->assertFalse(isset($form['disabled_field']));
         $this->assertEquals('kill_all', $form['action']);
     }
@@ -1017,6 +1078,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->submitForm('form', []);
         $form = data::get('form');
         $this->assertEquals('this & that', $form['test']);
+    }
+
+    public function testSubmitFormWithArrayField()
+    {
+        $this->module->amOnPage('/form/example17');
+        $this->module->submitForm('form', []);
+        $data = data::get('form');
+        $this->assertSame('baz', $data['FooBar']['bar']);
+        $this->assertArrayNotHasKey('FooBar[bar]', $data);
     }
 
     public function testSubmitFormMultiSelectWithArrayParameter()
@@ -1220,6 +1290,13 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         ));
         $form = data::get('form');
         $this->assertFalse(isset($form['checkbox1']), 'Checkbox value sent');
+    }
+
+    public function testSubmitFormWithCheckboxesWithoutValue()
+    {
+        $this->module->amOnPage('/form/checkbox_default_value');
+        $this->module->submitForm('form', ['checkbox1' => true]);
+        $this->assertSame('on', data::get('query')['checkbox1']);
     }
 
     public function testSubmitFormWithButtons()
@@ -1526,5 +1603,100 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
 
         $this->module->selectOption('age', ['text' => '21']);
         $this->module->seeOptionIsSelected('age', '21');
+    }
+
+    public function testClickButtonInLink()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click('More Info');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkAndSpan()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click('Span Info');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click(['css' => 'input[value="More Info"]']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkAndSpanUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click(['css' => 'input[value="Span Info"]']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickHashLink()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Link');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testClickHashButton()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Button');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testSubmitHashForm()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Form');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testClickingRelativeLinkHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Link');
+        $this->module->seeCurrentUrlEquals('/form/example7');
+    }
+
+    public function testSubmittingRelativeFormHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Form');
+        $this->module->seeCurrentUrlEquals('/form/example5');
+    }
+
+    public function testClickingRelativeLinkInContextHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Link', 'p');
+        $this->module->seeCurrentUrlEquals('/form/example7');
+    }
+
+    public function testSubmittingRelativeForminContextHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->fillField('rus', 'test value');
+        $this->module->click('Relative Form', '#button-container');
+        $this->module->seeCurrentUrlEquals('/form/example5');
+    }
+
+    public function testClickingFormButtonInContextSubmitsOutOfContextFormElements()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Form', '#button-container');
+        $this->assertArrayHasKey('rus', data::get('form'));
+    }
+
+    public function testAttachFileThrowsCorrectMessageWhenFileDoesNotExist()
+    {
+        $filename = 'does-not-exist.jpg';
+        $expectedMessage = 'File does not exist: ' . codecept_data_dir($filename);
+        $this->setExpectedException('InvalidArgumentException', $expectedMessage);
+
+        $this->module->amOnPage('/form/file');
+        $this->module->attachFile('Avatar', $filename);
     }
 }
