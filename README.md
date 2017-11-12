@@ -1,6 +1,9 @@
 # Instruction to run the project
 [How-to-run](how-to-run.md)
 
+## Useful extension 
+Click [here](http://demos.krajee.com) to find out more extensions
+
 Yii 2 Basic Project Template
 ============================
 
