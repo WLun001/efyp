@@ -5,6 +5,7 @@ use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use app\modules\students\models\Faculty;
 use yii\helpers\Url;
+use kartik\export\ExportMenu;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\students\models\StaffSearch */
@@ -31,6 +32,33 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]); ?>
     </p>        <?php //rint_r($dataProvider->getModels()); ?>
+
+    <?php
+    $gridColumns = [
+        ['class' => 'yii\grid\SerialColumn'],
+        'userID',
+        ['label'=>'Role',
+            'value'=>function($model){
+                return $model->rolesText;
+            },
+        ],
+        'name',
+        'contactNo',
+        'email',
+        ['label'=>'Faculty',
+            'value'=>function($model){
+                return $model->faculty->faculty;
+            },
+            'attribute' => 'faculty',
+            'filter' => ArrayHelper::map(Faculty::find()->all(),'facultyID','faculty')
+        ],
+        ['class' => 'yii\grid\ActionColumn'],
+    ];
+    echo ExportMenu::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => $gridColumns
+    ]);
+?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

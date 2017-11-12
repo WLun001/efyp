@@ -54,6 +54,10 @@ $config = [
         'students' => [
             'class' => 'app\modules\students\StudentModule',
         ],
+        'gridview' =>  [
+                    'class' => '\kartik\grid\Module',
+                    'downloadAction' => 'export',
+                ],
     ],
     'params' => $params,
     'defaultRoute' => '/site/login',
