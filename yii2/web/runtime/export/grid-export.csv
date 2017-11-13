@@ -1,2 +1,7 @@
 "#","User ID","Role","Name","Contact No","Email","Faculty",""
 "1","admin","Admin, FYP Coordinator","Dr Stella","1111111111111","stella@utar.my","Faculty of Creative Industries(FCI)",""
+"2","123456","Lecturer (Supervisors/Co-supervisors/Moderators), FYP Coordinator","Chan Kok Leong","1111111111111","chankokleong@utar.my","Lee Kong Chian Faculty of Engineering and Science(LKC FES)",""
+"3","111","FYP Coordinator, Lecturer (Supervisors/Co-supervisors/Moderators)","Hoo Mei Hao","1111111111111","hmhao@1utar.my","Lee Kong Chian Faculty of Engineering and Science(LKC FES)",""
+"4","000","Lecturer (Supervisors/Co-supervisors/Moderators), FYP Coordinator","Chean Swee Ling","1111111111111","cheansweeling@utar.my","Lee Kong Chian Faculty of Engineering and Science(LKC FES)",""
+"5","222","Lecturer (Supervisors/Co-supervisors/Moderators), FYP Coordinator","Madhavan Nair","0123456789","madhavan@1utar.my","Lee Kong Chian Faculty of Engineering and Science(LKC FES)",""
+"6","333","Lecturer (Supervisors/Co-supervisors/Moderators)","Lim Khong Leng","0123456789","lim@1utar.my","Lee Kong Chian Faculty of Engineering and Science(LKC FES)",""
