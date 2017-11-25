@@ -6,6 +6,7 @@ use app\models\Roles;
 use yii\helpers\ArrayHelper;
 use app\modules\students\models\Faculty;
 use app\modules\students\models\Departments;
+use kartik\checkbox\CheckboxX;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\students\models\Staff */
@@ -34,11 +35,10 @@ use app\modules\students\models\Departments;
 
     <div class="roleWrapper">
 
-    <?= $select=$form->field($model, 'roleArray[]')->dropDownList(($model->roles), ['prompt'=>"Select Role to Assign"])->label('Role') ?>
+    <?php echo $select=$form->field($model, 'roleArray[]')->checkboxList($model->roles)->label('Role'); ?>
 
     </div>
     <button id="addRoleBtn" type="button" class="btn" style="margin-bottom: 10px;">Add More Role To Assign</button>
-
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -47,6 +47,8 @@ use app\modules\students\models\Departments;
     <?php ActiveForm::end(); 
         $str = json_encode($select->parts['{input}']);
     ?>
+
+
 
 </div>
 
