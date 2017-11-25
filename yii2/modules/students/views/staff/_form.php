@@ -35,9 +35,8 @@ use kartik\checkbox\CheckboxX;
 
     <div class="roleWrapper">
 
-    <?/*= $select=$form->field($model, 'roleArray[]')->dropDownList(($model->roles), ['prompt'=>"Select Role to Assign"])->label('Role') */?>
+    <?php echo $select=$form->field($model, 'roleArray[]')->checkboxList($model->roles)->label('Role'); ?>
 
-    <?php echo $select=$form->field($model, 'roleArray[]')->checkboxList($model->roles); ?>
     </div>
     <button id="addRoleBtn" type="button" class="btn" style="margin-bottom: 10px;">Add More Role To Assign</button>
 
@@ -48,17 +47,6 @@ use kartik\checkbox\CheckboxX;
     <?php ActiveForm::end(); 
         $str = json_encode($select->parts['{input}']);
     ?>
-
-    <?php
-/*    echo CheckboxX::widget([
-        'model' => $model,
-        'attribute' => 'roleArray[]',
-        'pluginOptions' => [
-            'threeState' => false,
-            'size' => 'sm'
-        ]
-    ]);
-    */?>
 
 
 
