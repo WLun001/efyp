@@ -55,7 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
         ['label' => 'Co Supervisor',
             'value' => function($model){
-                return $model->coSupervisor0->name;},
+                if(!empty($model->coSupervisor0->name))
+                    return ('(not set)');},
             'attribute' => 'name',
             'filter' => ArrayHelper::map(Staff::find()->all(),'id','name')
         ],
@@ -70,7 +71,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     echo ExportMenu::widget([
         'dataProvider' => $dataProvider,
-        'columns' => $gridColumns
+        'columns' => $gridColumns,
+        'emptyText' => 'NULL'
     ]);
 ?>
 
