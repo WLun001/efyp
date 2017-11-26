@@ -15,12 +15,12 @@ use yii\helpers\Html;
 			<div class="text">Manage Students</div>',['/students/students'])?>
 	</li>
 	<li class="options">
-		<?= Html::a('<img class="icon" src="image/departments.png">
-			<div class="text">Manage Departments</div>',['/students/departments'])?>
+		<?= Html::a('<img class="icon" src="image/faculty.png">
+			<div class="text">Manage Faculty</div>',['/students/faculty'])?>		
 	</li>
 	<li class="options">
-		<?= Html::a('<img class="icon" src="image/faculty.png">
-			<div class="text">Manage Faculty</div>',['/students/faculty'])?>
+		<?= Html::a('<img class="icon" src="image/departments.png">
+			<div class="text">Manage Departments</div>',['/students/departments'])?>
 	</li>
 	<li class="options">
 		<?= Html::a('<img class="icon" src="image/fyptitle.png">

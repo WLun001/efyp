@@ -55,8 +55,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
         ['label' => 'Co Supervisor',
             'value' => function($model){
-                if(!empty($model->coSupervisor0->name))
-                    return ('(not set)');},
+                if(empty($model->coSupervisor0->name))
+                    return ('(not set)');
+                else
+                    return $model->coSupervisor0->name;},
             'attribute' => 'name',
             'filter' => ArrayHelper::map(Staff::find()->all(),'id','name')
         ],
