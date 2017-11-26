@@ -48,7 +48,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     echo ExportMenu::widget([
         'dataProvider' => $dataProvider,
-        'columns' => $gridColumns
+        'columns' => $gridColumns,
+        'filename' => 'Staffs'
     ]);
 ?>
 
