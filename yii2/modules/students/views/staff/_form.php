@@ -34,11 +34,8 @@ use kartik\checkbox\CheckboxX;
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
     <div class="roleWrapper">
-
-    <?php echo $select=$form->field($model, 'roleArray[]')->checkboxList($model->roles)->label('Role'); ?>
-
+        <?php echo $select=$form->field($model, 'roleArray[]')->checkboxList($model->roles)->label('Role'); ?>
     </div>
-    <button id="addRoleBtn" type="button" class="btn" style="margin-bottom: 10px;">Add More Role To Assign</button>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -47,15 +44,11 @@ use kartik\checkbox\CheckboxX;
     <?php ActiveForm::end(); 
         $str = json_encode($select->parts['{input}']);
     ?>
-
-
-
 </div>
 
 <?php $this->registerJS("
 
         $( document ).ready(function() {
-
             
             $('#addRoleBtn').click(function(){
 
@@ -63,9 +56,7 @@ use kartik\checkbox\CheckboxX;
               
             });
             
-
         });
-
 
     ")
     

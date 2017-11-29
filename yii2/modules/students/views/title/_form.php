@@ -21,8 +21,7 @@ use app\modules\students\models\Staff;
 
     <?= $form->field($model, 'batch')->textInput(['maxlength' => true])->label('Batch (Eg: January 2017)') ?>
 
-    <?= $form->field($model, 'category')->dropDownList(
-    $model->category0,['prompt'=>'Please Select'])->label('FYP Category') ?>
+    <?= $form->field($model, 'category')->dropDownList($model->category0,['prompt'=>'Please Select'])->label('FYP Category') ?>
 
     <?= $form->field($model, 'faculty')->dropDownList(
     ArrayHelper::map(Faculty::find()->all(),'facultyID','faculty'),['prompt'=>'Please Choose a Faculty']) ?>
@@ -33,32 +32,34 @@ use app\modules\students\models\Staff;
     <?= $form->field($model, 'descriptions')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'equipment')->textarea(['rows' => 2]) ?>
+
+    <?= $form->field($model, 'requirements')->textarea(['rows' => 2]) ?>
+
+    <?= $form->field($model, 'industrialLinks')->textarea(['rows' => 2]) ?>
+    
+    <?= $form->field($model, 'commProjects')->textarea(['rows' => 2]) ?>
+
     <div class="courseWrapper">
-
-    <?= $select= $form->field($model, 'courseArray[]')->dropDownList(
-    $allCourse,['prompt'=>'Please Choose a Course'])->label('Suitable For Course') ?>
-
+        <?= $select= $form->field($model, 'courseArray[]')->dropDownList($allCourse,['prompt'=>'Please Choose a Course'])->label('Suitable For Course') ?>
     </div>
 
     <button id="addCourseBtn" type="button" class="btn">Add More Course</button>
+
     <?= $form->field($model, 'supervisor')->dropDownList(
     ArrayHelper::map($supervisors,'id','name'),['prompt'=>'Please Choose a Supervisor'])->label('Supervisor') ?>
 
     <?= $form->field($model, 'coSupervisor')->dropDownList(
     ArrayHelper::map($supervisors,'id','name'),['prompt'=>'Please Choose a Co-Supervisor'])->label('Co-Supervisor (If none,leave it blank)') ?>
 
-
     <?= $form->field($model, 'moderator')->dropDownList(
     ArrayHelper::map($supervisors,'id','name'),['prompt'=>'Please Choose a Moderator'])->label('Moderator (If none,leave it blank)') ?>
-
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); 
-    $str = json_encode($select->parts['{input}']);
-
+        $str = json_encode($select->parts['{input}']);
     ?>
 
 </div>
@@ -67,16 +68,13 @@ use app\modules\students\models\Staff;
 
         $( document ).ready(function() {
 
-            
             $('#addCourseBtn').click(function(){
 
                 $('.courseWrapper').append(".$str.").append('<br/>');
               
             });
-            
 
         });
-
 
     ")
     

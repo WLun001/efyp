@@ -13,7 +13,10 @@ use app\modules\students\models\Staff;
  * @property integer $faculty
  * @property string $departments
  * @property string $descriptions
- * @property string $equipment
+ * @property string $equipments
+ * @property string $requirements
+ * @property string $industrialLinks
+ * @property string $commProjects
  * @property string $course
  * @property integer $status
  * @property integer $supervisor
@@ -60,7 +63,7 @@ class Title extends \yii\db\ActiveRecord
         return [
             [['title', 'batch', 'category', 'faculty', 'departments', 'descriptions', 'equipment', 'course', 'supervisor'], 'required'],
             [['category', 'faculty', 'status', 'supervisor', 'coSupervisor', 'moderator'], 'integer'],
-            [['descriptions', 'equipment'], 'string'],
+            [['descriptions', 'equipment', 'requirements', 'industrialLinks', 'commProjects'], 'string'],
             [['title', 'batch', 'departments', 'course'], 'string', 'max' => 255],
             [['student_fk'], 'string', 'max' => 20],
             [['coSupervisor'], 'exist', 'skipOnError' => true, 'targetClass' => Staff::className(), 'targetAttribute' => ['coSupervisor' => 'id']],
@@ -86,6 +89,9 @@ class Title extends \yii\db\ActiveRecord
             'departments' => 'Departments',
             'descriptions' => 'Project Descriptions',
             'equipment' => 'Equipment Required',
+            'requirements' => 'Special Requirements',
+            'industrialLinks' => 'Industrial Links',
+            'commProjects' => 'Community Projects',
             'course' => 'Suitable For Course',
             'status' => 'Status',
             'supervisor' => 'Supervisor',

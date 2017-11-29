@@ -63,11 +63,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'filter' => ArrayHelper::map(Staff::find()->all(),'id','name')
         ],
 
+        ['label' => 'Moderator',
+            'value' => function($model){
+                if(empty($model->moderator0->name))
+                    return ('(not set)');
+                else
+                    return $model->moderator0->name;},
+            'attribute' => 'name',
+            'filter' => ArrayHelper::map(Staff::find()->all(),'id','name')
+        ],
+
         'departments',
         'descriptions',
         'equipment',
+        'requirements',
+        'industrialLinks',
+        'commProjects',
         'course',
-        'moderator',
         'student_fk',
     ];
 

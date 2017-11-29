@@ -44,7 +44,7 @@ use yii\helpers\Html;
 	</li>
 	<li class="options">
 		<?= Html::a('<img class="icon" src="image/upload-documents.png">
-			<div class="text">Manage Students Download Documents </div>',['/students/downloads'])?>
+			<div class="text">Manage Students Download FYP Documents </div>',['/students/downloads'])?>
 	</li>
 	<li class="options">
 		<?= Html::a('<img class="icon" src="image/progress.png">
